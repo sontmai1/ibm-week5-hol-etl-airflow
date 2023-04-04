@@ -40,7 +40,7 @@ unzip_data = BashOperator(
 # define the task 'extract' 
 extract_data_from_csv = BashOperator( 
     task_id='extract_data_from_csv', 
-    bash_command='cut -f1-4 -d"," /home/project/airflow/dags/finalassignment/vehicle-data.csv > /home/project/airflow/dags/finalassignment/staging/csv_data.csv', 
+    bash_command='cut -f1-4 -d "," /home/project/airflow/dags/finalassignment/vehicle-data.csv > /home/project/airflow/dags/finalassignment/staging/csv_data.csv', 
     dag=dag, 
 ) 
 
@@ -55,28 +55,21 @@ extract_data_from_tsv = BashOperator(
 extract_data_from_fixed_width = BashOperator( 
 
     task_id='extract_data_from_fixed_width', 
-    bash_command=""" 
-        cut -c59-67 /home/project/airflow/dags/finalassignment/payment-data.txt | 
-        tr ' ' ',' > /home/project/airflow/dags/finalassignment/staging/fixed_width_data.csv 
-    """, 
+    bash_command='cut -c59-67 /home/project/airflow/dags/finalassignment/payment-data.txt | tr " " "," > /home/project/airflow/dags/finalassignment/staging/fixed_width_data.csv', 
     dag=dag, 
 ) 
 
 #define the task 'consolidate_data' 
 consolidate_data = BashOperator( 
     task_id='consolidate_data', 
-    bash_command=""" 
-        paste -d ',' /home/project/airflow/dags/finalassignment/staging/csv_data.csv /home/project/airflow/dags/finalassignment/staging/tsv_data.csv /home/project/airflow/dags/finalassignment/staging/fixed_width_data.csv > /home/project/airflow/dags/finalassignment/staging/extracted_data.csv 
-    """, 
+    bash_command='paste -d "," /home/project/airflow/dags/finalassignment/staging/csv_data.csv /home/project/airflow/dags/finalassignment/staging/tsv_data.csv /home/project/airflow/dags/finalassignment/staging/fixed_width_data.csv > /home/project/airflow/dags/finalassignment/staging/extracted_data.csv', 
     dag=dag, 
 ) 
 
 # define the task 'transform_data' 
 transform_data = BashOperator( 
     task_id='transform_data', 
-    bash_command=""" 
-        cut -d , -f 1-9 /home/project/airflow/dags/finalassignment/staging/extracted_data.csv | tr [:lower:] [:upper:] > /home/project/airflow/dags/finalassignment/staging/transform_data.csv
-    """, 
+    bash_command='cut -d , -f 1-9 /home/project/airflow/dags/finalassignment/staging/extracted_data.csv | tr [:lower:] [:upper:] > /home/project/airflow/dags/finalassignment/staging/transformed_data.csv', 
     dag=dag, 
 ) 
 

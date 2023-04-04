@@ -47,10 +47,7 @@ extract_data_from_csv = BashOperator(
 # define the task 'extract_data_from_tsv' 
 extract_data_from_tsv = BashOperator( 
     task_id='extract_data_from_tsv', 
-    bash_command=""" 
-        cut -f5-7 /home/project/airflow/dags/finalassignment/tollplaza-data.tsv |
-        tr '\t' ',' > /home/project/airflow/dags/finalassignment/staging/tsv_data.csv 
-    """, 
+    bash_command='cut -f5- /home/project/airflow/dags/finalassignment/tollplaza-data.tsv | tr -d "\r" | tr "[:blank:]" "," > /home/project/airflow/dags/finalassignment/staging/tsv_data.csv', 
     dag=dag, 
 ) 
 
@@ -78,8 +75,7 @@ consolidate_data = BashOperator(
 transform_data = BashOperator( 
     task_id='transform_data', 
     bash_command=""" 
-        cut -d , -f 1-9 /home/project/airflow/dags/finalassignment/staging/extracted_data.csv | 
-        tr [:lower:] [:upper:] > /home/project/airflow/dags/finalassignment/staging/transform_data.csv 
+        cut -d , -f 1-9 /home/project/airflow/dags/finalassignment/staging/extracted_data.csv | tr [:lower:] [:upper:] > /home/project/airflow/dags/finalassignment/staging/transform_data.csv
     """, 
     dag=dag, 
 ) 
